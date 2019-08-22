@@ -1,3 +1,6 @@
+#include "ssm_sm.h"
+#include "ssm_config.h"
+
 uint8_t GetModuleStateCount(uint8_t module_id)
 {
   uint8_t module_index = g_SsmInfo.ModuleIndex[module_id];
@@ -8,10 +11,10 @@ uint8_t GetModuleStateCount(uint8_t module_id)
 void InitModuleStateType()
 {
   uint8_t                       module_index = 0;
-  struct Ts_MainStateConfig*    plist_stateConfig;
+  uint8_t                       list_index = 0;
+  Ts_MainStateConfig const*     plist_stateConfig;
   Te_MainStateType_u8*          plist_MainStateType;
   uint8_t                       main_state_id;
-  Te_MainStateType_u8           state_type;
   
   for (module_index = 0; module_index < Te_ModuleId_Count; module_index++)
   {
@@ -33,7 +36,7 @@ Te_MainStateType_u8 GetMainStateType(uint8_t module_id, uint8_t main_state)
   uint8_t                       module_index = 0;
   Te_MainStateType_u8*          plist_MainStateType;
   module_index = g_SsmInfo.ModuleIndex[module_id];
-  plist_MainStateType = g_SsmInfo.module_info[module_index].state_manager.plist_MainStateType;£»
+  plist_MainStateType = g_SsmInfo.module_info[module_index].state_manager.plist_MainStateType;
     
   return plist_MainStateType[main_state];
 }
@@ -100,7 +103,7 @@ int SetMainState(uint8_t module_id, uint8_t main_state)
   if (main_state == state.MainState)
     return 0;
   
-  if(0 £¡= CheckRightful_StateChange(module_id, main_state))
+  if(0 != CheckRightful_StateChange(module_id, main_state))
     return -1;
   
   /**maybe state transfer path should support a context**/
@@ -110,8 +113,7 @@ int SetMainState(uint8_t module_id, uint8_t main_state)
     
     if ( (mainStateType == Te_MainStateType_RunOnce && GetDependModuleCount(module_id) == 0) 
       || mainStateType == Te_MainStateType_RunCycle )
-    {
-      
+    {      
       state.SubState = Te_SubState_Ready;
     }
     else if (mainStateType == Te_MainStateType_RunOnce && GetDependModuleCount(module_id) > 0)
@@ -140,7 +142,7 @@ int SetSubState(uint8_t module_id, uint8_t sub_state)
   
   state.SubState = sub_state;
   
-  return SetModuleState(module_id, state);
+  SetModuleState(module_id, state);
 }
 /*********************************************/
 /*********************************************/
@@ -152,7 +154,7 @@ int ModuleStateCheck_SSM(uint8_t this_module_id)
   uint8_t                       depend_dst_mainState;
   uint8_t                       depend_module_id;
   uint8_t                       errorId = 0;
-  BOOL_t                        depend_ok = TRUE;
+  BOOL                        depend_ok = TRUE;
   
   self_state = GetModuleState(this_module_id);
   

@@ -1,6 +1,25 @@
 #include "datadomain.h"
 #include "ssm_type.h"
+#include "ssm_config.h"
 
+void AddModuleHeartBeatPauseCount(uint8_t module_id)
+{
+  uint8_t module_index = g_SsmInfo.ModuleIndex[module_id];
+  
+  g_SsmInfo.module_info[module_index].heartbeat_manager.heartbeat_pauseCount++;
+}
+void ClearModuleHeartBeatPauseCount(uint8_t module_id)
+{
+  uint8_t module_index = g_SsmInfo.ModuleIndex[module_id];
+  
+  g_SsmInfo.module_info[module_index].heartbeat_manager.heartbeat_pauseCount = 0;
+}
+uint16_t GetModuleHeartBeatPauseCount(uint8_t module_id)
+{
+  uint8_t module_index = g_SsmInfo.ModuleIndex[module_id];
+  
+  return g_SsmInfo.module_info[module_index].heartbeat_manager.heartbeat_pauseCount;
+}
 
 void SetHeartBeatState(uint8_t module_id, Te_HeartBeatState_u8 state)
 {
@@ -29,24 +48,7 @@ void InitModuleHeartBeatState()
     SetHeartBeatState(module_id, Te_HeartBeatState_Pause);
   }
 }
-void AddModuleHeartBeatPauseCount(uint8_t module_id)
-{
-  uint8_t module_index = g_SsmInfo.ModuleIndex[module_id];
-  
-  g_SsmInfo.module_info[module_index].heartbeat_manager.heartbeat_pauseCount++;
-}
-void ClearModuleHeartBeatPauseCount(uint8_t module_id)
-{
-  uint8_t module_index = g_SsmInfo.ModuleIndex[module_id];
-  
-  g_SsmInfo.module_info[module_index].heartbeat_manager.heartbeat_pauseCount = 0;
-}
-uint16_t GetModuleHeartBeatPauseCount(uint8_t module_id)
-{
-  uint8_t module_index = g_SsmInfo.ModuleIndex[module_id];
-  
-  return g_SsmInfo.module_info[module_index].heartbeat_manager.heartbeat_pauseCount;
-}
+
 int ModuleHeartBeatCheck_SSM(uint8_t module_id)
 {
   Te_HeartBeatState_u8 state = GetHeartBeatState(module_id);

@@ -1,5 +1,6 @@
 #include "datadomain.h"
 #include "ssm_type.h"
+#include "ssm_config.h"
 
 /*********************************************/
 uint8_t GetModuleDependLevel(uint8_t module_id)
@@ -33,12 +34,12 @@ void SetModuleId_DpendLevelRaise(uint8_t list_index, uint8_t module_id)
 {
   g_SsmInfo.ModuleId_DpendLevelRaise[list_index] = module_id;
 }
-ModuleMainState_T  GetModuleStateDepend(uint8_t this_module_id, 
+Te_ModuleMainState_u8  GetModuleStateDepend(uint8_t this_module_id, 
                                         uint8_t depend_module_id, 
-                                        ModuleMainState_T this_state)
+                                        Te_ModuleMainState_u8 this_state)
 {
   uint8_t module_index;
-  ModuleMainState_T depend_state;
+  Te_ModuleMainState_u8 depend_state;
   
   if (this_module_id == depend_module_id)
     return StateNoDepend;
@@ -51,12 +52,12 @@ ModuleMainState_T  GetModuleStateDepend(uint8_t this_module_id,
 
 void SetModuleStateDepend(uint8_t this_module_id, 
                           uint8_t depend_module_id, 
-                          ModuleMainState_T this_state,
-                          ModuleMainState_T depend_state)
+                          Te_ModuleMainState_u8 this_state,
+                          Te_ModuleMainState_u8 depend_state)
 {
   uint8_t                       this_module_index;
   uint8_t                       module_id;
-  ModuleMainState_T             redepend_state;                                 /*recursion only once*/
+  Te_ModuleMainState_u8             redepend_state;                                 /*recursion only once*/
   
   if (this_module_id == depend_module_id || this_state == StateNoDepend)
     return;
@@ -99,7 +100,7 @@ void ClearAllModuleDependLevel()
 }
 void InitModuleLevel()
 {
-  BOOL_t                go_continue = TRUE;
+  BOOL                go_continue = TRUE;
   uint8_t               module_id = 0;
   uint8_t               depend_module_count;
   uint8_t               list_index = 0;
@@ -142,7 +143,7 @@ void InitModuleLevel()
     {
       if (GetModuleDependLevel(module_id) == depend_level)
       {
-        SetModuleId_DpendLevelRaise(list_index, module_id)
+        SetModuleId_DpendLevelRaise(list_index, module_id);
         list_index++;
         go_continue = TRUE;
       }
@@ -181,12 +182,13 @@ void InitModuleIndex()
 void InitModuleDepend()
 {
   uint8_t                       module_index = 0;
+  uint8_t                       buff_index = 0;
   uint8_t                       list_index = 0;
   uint8_t                       depend_module_count = 0;
   uint8_t                       this_module_id;
-  struct Ts_DependModuleConfig* plist_dependModule;
+  Ts_DependModuleConfig const*  plist_dependModule;
   uint8_t                       depend_module_id;
-  struct Ts_StateDependPair*    plist_pair;
+  Ts_StateDependPair const*     plist_pair;
   uint8_t                       pair_count;
   uint8_t                       pair_index;
   uint8_t                       self_state;

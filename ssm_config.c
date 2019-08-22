@@ -1,8 +1,8 @@
-#ifndef SSM_CONFIG_H
-#define SSM_CONFIG_H
-
+#include "ssm_type.h"
+#include "ssm_config.h"
+#include "ssm_rte.h"
 /******************************************************/
-const struct Ts_MainStateConfig g_MainStateConfig_CM[] = 
+const Ts_MainStateConfig g_MainStateConfig_CM[] = 
 {
   {Te_MainState_CM_Idle,                Te_MainStateType_Idle},
   {Te_MainState_CM_Init,                Te_MainStateType_RunOnce},
@@ -13,7 +13,7 @@ const struct Ts_MainStateConfig g_MainStateConfig_CM[] =
   {Te_MainState_CM_Terminate,           Te_MainStateType_RunOnce},
   {Te_MainState_All_End,                Te_MainStateType_End}
 };
-const struct Ts_MainStateConfig g_MainStateConfig_HmiAdapte[] = 
+const Ts_MainStateConfig g_MainStateConfig_HmiAdapte[] = 
 {
   {Te_MainState_HmiAdapte_Idle,         Te_MainStateType_Idle},
   {Te_MainState_HmiAdapte_Init,         Te_MainStateType_RunOnce},
@@ -21,7 +21,7 @@ const struct Ts_MainStateConfig g_MainStateConfig_HmiAdapte[] =
   {Te_MainState_HmiAdapte_Terminate,    Te_MainStateType_RunOnce},
   {Te_MainState_All_End,                Te_MainStateType_End}
 };
-const struct Ts_MainStateConfig g_MainStateConfig_ADV2HR[] = 
+const Ts_MainStateConfig g_MainStateConfig_ADV2HR[] = 
 {
   {Te_MainState_ADV2HR_Idle,            Te_MainStateType_Idle},
   {Te_MainState_ADV2HR_Init,            Te_MainStateType_RunOnce},
@@ -29,7 +29,7 @@ const struct Ts_MainStateConfig g_MainStateConfig_ADV2HR[] =
   {Te_MainState_ADV2HR_Terminate,       Te_MainStateType_RunOnce},
   {Te_MainState_All_End,                Te_MainStateType_End}
 };
-const struct Ts_MainStateConfig g_MainStateConfig_System[] = 
+const Ts_MainStateConfig g_MainStateConfig_System[] = 
 {       
   {Te_MainState_System_Idle,          	Te_MainStateType_Idle},
   {Te_MainState_System_Init,          	Te_MainStateType_RunOnce},
@@ -41,7 +41,7 @@ const struct Ts_MainStateConfig g_MainStateConfig_System[] =
   {Te_MainState_All_End,                Te_MainStateType_End}
 };
 /******************************************************/
-const struct Ts_StateDependPair SystemDependCruiseManager[] = 
+const Ts_StateDependPair SystemDependCruiseManager[] = 
 {
   {Te_MainState_System_Idle,            Te_MainState_CM_Idle},
   {Te_MainState_System_Init,            Te_MainState_CM_Init},
@@ -52,7 +52,7 @@ const struct Ts_StateDependPair SystemDependCruiseManager[] =
   {Te_MainState_System_Terminate,       Te_MainState_CM_Terminate},
   {Te_MainState_All_End,                Te_MainState_All_End}
 };
-const struct Ts_StateDependPair SystemDependHmiAdapte[] = 
+const Ts_StateDependPair SystemDependHmiAdapte[] = 
 {
   {Te_MainState_System_Idle,            Te_MainState_HmiAdapte_Idle},
   {Te_MainState_System_Init,            Te_MainState_HmiAdapte_Init},
@@ -63,7 +63,7 @@ const struct Ts_StateDependPair SystemDependHmiAdapte[] =
   {Te_MainState_System_Terminate,       Te_MainState_HmiAdapte_Terminate},
   {Te_MainState_All_End,                Te_MainState_All_End}
 };
-const struct Ts_StateDependPair SystemDependADV2HR[] = 
+const Ts_StateDependPair SystemDependADV2HR[] = 
 {
   {Te_MainState_System_Idle,            Te_MainState_ADV2HR_Idle},
   {Te_MainState_System_Init,            Te_MainState_ADV2HR_Init},
@@ -71,22 +71,22 @@ const struct Ts_StateDependPair SystemDependADV2HR[] =
   {Te_MainState_System_Terminate,       Te_MainState_ADV2HR_Terminate},
   {Te_MainState_All_End,                Te_MainState_All_End}
 };
-const struct Ts_ModuleInfo SystemDependModuleList[] = 
+const Ts_DependModuleConfig SystemDependModuleList[] = 
 {
   {
       Te_ModuleId_CruiseManager, 
       SystemDependCruiseManager, 
-      sizeof(SystemDependCruiseManager)/sizeof(struct Ts_StateDependPair)
+      sizeof(SystemDependCruiseManager)/sizeof(Ts_StateDependPair)
   },
   {
       Te_ModuleId_ADV2HR, 
       SystemDependADV2HR, 
-      sizeof(SystemDependADV2HR)/sizeof(struct Ts_StateDependPair)
+      sizeof(SystemDependADV2HR)/sizeof(Ts_StateDependPair)
   },
   {     
       Te_ModuleId_HmiAdapte, 
       SystemDependHmiAdapte, 
-      sizeof(SystemDependHmiAdapte)/sizeof(struct Ts_StateDependPair)
+      sizeof(SystemDependHmiAdapte)/sizeof(Ts_StateDependPair)
   },
   {     
       Te_ModuleId_End, 
@@ -95,7 +95,7 @@ const struct Ts_ModuleInfo SystemDependModuleList[] =
   }
 };
 /******************************************************/
-struct Ts_SsmInfo g_SsmInfo = 
+Ts_SsmInfo g_SsmInfo = 
 {
   {//struct Ts_ModuleInfo list
     {//struct Ts_ModuleInfo
@@ -106,14 +106,14 @@ struct Ts_SsmInfo g_SsmInfo =
           g_MainStateType_System//pMainStateType
         },
         {//struct Ts_ModuleDependManager
-          sizeof(SystemDependModuleList)/sizeof(struct Ts_DependModuleConfig),
+          sizeof(SystemDependModuleList)/sizeof(Ts_DependModuleConfig),
           SystemDependModuleList, 
           ModuleDependInitLevel,          
-          ModuleDepend_System             /* param fisrt: self state index; second: depend module id; result: depend module state */
+          ModuleDepend_System                                                   /* param fisrt: self state index; second: depend module id; result: depend module state */
         },
         {//struct Ts_HeartBeatManager
-          Te_HeartBeatState_OK,
-          {0,0}
+          Te_HeartBeatState_Fine,
+          0
         }
     },
     {
@@ -121,7 +121,7 @@ struct Ts_SsmInfo g_SsmInfo =
         {
           Te_MainState_CM_Count,
           g_MainStateConfig_CM,
-          g_MainStateType_CM
+          g_MainStateType_CruiseManager
         },
         {
           0,
@@ -130,8 +130,8 @@ struct Ts_SsmInfo g_SsmInfo =
           NULL
         },
         {//struct Ts_HeartBeatManager
-          Te_HeartBeatState_OK,
-          {0,0}
+          Te_HeartBeatState_Fine,
+          0
         }
     },
     {
@@ -148,8 +148,8 @@ struct Ts_SsmInfo g_SsmInfo =
           NULL
         },
         {//struct Ts_HeartBeatManager
-          Te_HeartBeatState_OK,
-          {0,0}
+          Te_HeartBeatState_Fine,
+          0
         }
     },
     {
@@ -166,11 +166,9 @@ struct Ts_SsmInfo g_SsmInfo =
           NULL
         },
         {//struct Ts_HeartBeatManager
-          Te_HeartBeatState_OK,
-          {0,0}
+          Te_HeartBeatState_Fine,
+          0
         }
     }
   }//struct Ts_ModuleInfo list end
 };
-
-#endif

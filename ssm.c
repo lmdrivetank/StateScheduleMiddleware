@@ -1,6 +1,6 @@
 #include "datadomain.h"
 #include "ssm_type.h"
-
+#include "ssm_config.h"
 
 /********************init*************************/
 int InitProcess_SSM()
