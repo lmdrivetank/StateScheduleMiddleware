@@ -50,7 +50,12 @@ int CheckRightful_StateChange(uint8_t module_id, uint8_t dst_main_state)
 }
 static void SetModuleState(uint8_t module_id, struct Ts_ModuleState state)
 {
-  //private in this file
+  Te_MoudleId_u8        module_index    = g_SsmInfo.ModuleIndex[module_id];
+  Ts_StateManager*      pstate_manager  = &(g_SsmInfo.module_info[module_index].state_manager);
+
+  pstate_manager->main_state = state.MainState;
+  pstate_manager->sub_state = state.SubState;
+#if 0
   switch (module_id)
   {
   case Te_ModuleId_System:
@@ -64,10 +69,19 @@ static void SetModuleState(uint8_t module_id, struct Ts_ModuleState state)
   default:
     break;
   }
+#endif
 }
 struct Ts_ModuleState GetModuleState(uint8_t module_id)
 {
+  Te_MoudleId_u8        module_index    = g_SsmInfo.ModuleIndex[module_id];
+  Ts_StateManager*      pstate_manager  = &(g_SsmInfo.module_info[module_index].state_manager);
   struct Ts_ModuleState state;
+  
+  state.MainState = pstate_manager->main_state;
+  state.SubState = pstate_manager->sub_state;
+  
+  return state;
+#if 0
   switch (module_id)
   {
   case Te_ModuleId_System:
@@ -82,29 +96,30 @@ struct Ts_ModuleState GetModuleState(uint8_t module_id)
     break;
   }
   return state;
+#endif
 }
-uint8_t GetMainState(uint8_t module_id)
+Te_ModuleMainState_u8 GetMainState(Te_MoudleId_u8 module_id)
 {
   struct Ts_ModuleState state = GetModuleState(module_id);
   
   return state.MainState;
 }
-uint8_t GetSubState(uint8_t module_id)
+Te_ModuleSubState_u8 GetSubState(Te_MoudleId_u8 module_id)
 {
   struct Ts_ModuleState state = GetModuleState(module_id);
   
   return state.SubState;
 }
-int SetMainState(uint8_t module_id, uint8_t main_state)
+void SetMainState(Te_MoudleId_u8 module_id, Te_ModuleMainState_u8 main_state)
 {
   struct Ts_ModuleState         state           = GetModuleState(module_id);
   Te_MainStateType_u8           mainStateType   = GetMainStateType(module_id, main_state);
 
   if (main_state == state.MainState)
-    return 0;
+    return;
   
   if(0 != CheckRightful_StateChange(module_id, main_state))
-    return -1;
+    return;
   
   /**maybe state transfer path should support a context**/
   if (state.SubState == Te_SubState_StopSucceed)
@@ -133,10 +148,8 @@ int SetMainState(uint8_t module_id, uint8_t main_state)
     state.SubState = Te_SubState_Hold;
     SetModuleState(module_id, state);
   }
-  
-  return 0;
 }
-int SetSubState(uint8_t module_id, uint8_t sub_state)
+void SetSubState(Te_MoudleId_u8 module_id, Te_ModuleSubState_u8 sub_state)
 {
   struct Ts_ModuleState state = GetModuleState(module_id);
   
@@ -154,7 +167,7 @@ int ModuleStateCheck_SSM(uint8_t this_module_id)
   uint8_t                       depend_dst_mainState;
   uint8_t                       depend_module_id;
   uint8_t                       errorId = 0;
-  BOOL                        depend_ok = TRUE;
+  BOOL                          depend_ok = TRUE;
   
   self_state = GetModuleState(this_module_id);
   

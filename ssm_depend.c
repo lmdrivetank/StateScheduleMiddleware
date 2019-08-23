@@ -57,7 +57,7 @@ void SetModuleStateDepend(uint8_t this_module_id,
 {
   uint8_t                       this_module_index;
   uint8_t                       module_id;
-  Te_ModuleMainState_u8             redepend_state;                                 /*recursion only once*/
+  Te_ModuleMainState_u8         redepend_state;                                 /*recursion only once*/
   
   if (this_module_id == depend_module_id || this_state == StateNoDepend)
     return;

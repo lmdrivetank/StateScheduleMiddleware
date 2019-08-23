@@ -1,6 +1,7 @@
 #ifndef _SSM_TYPE_H_
 #define _SSM_TYPE_H_
 #include "type.h"
+#include "datadomain.h"
 
 /******thread region start******/
 typedef enum 
@@ -36,7 +37,9 @@ typedef enum
   Te_SubState_StopSucceed,
   Te_SubState_StopFailed,
   Te_SubState_HeartBeatError,
-} Te_GeneralSubState;
+  
+  Te_SubState_Count
+} Te_ModuleSubState;
 typedef uint8_t Te_ModuleSubState_u8;
 /******thread region end******/
 
@@ -97,7 +100,8 @@ typedef enum
   Te_MainState_ADV2HR_Count
 } Te_MainState_ADV2HR;
 typedef uint8_t Te_ModuleMainState_u8;
-
+/******module state region end******/
+/******module state type region start******/
 typedef enum
 {
   Te_MainStateType_Idle,
@@ -107,7 +111,7 @@ typedef enum
   Te_MainStateType_Count
 } Te_MainStateType;
 typedef uint8_t Te_MainStateType_u8;
-/******module state region end******/
+/******module state type region end******/
 
 typedef enum
 {
@@ -141,10 +145,10 @@ typedef struct
 
 typedef struct
 {
-  /* datedomain store them
-  uint8_t                                       main_state;
-  uint8_t                                       sub_state;
-  ************************/
+  /* datedomain store them */
+  Te_MainStateType_u8                           main_state;
+  Te_ModuleSubState_u8                          sub_state;
+  /*************************/
   const uint8_t                                 state_count;  
   Ts_MainStateConfig const*const                plist_stateConfig;
   

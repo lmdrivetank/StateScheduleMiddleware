@@ -101,6 +101,8 @@ Ts_SsmInfo g_SsmInfo =
     {//struct Ts_ModuleInfo
         Te_ModuleId_System, //module_id
         {//struct Ts_StateManager
+          Te_MainState_All_Idle,
+          Te_SubState_StopSucceed,
           Te_MainState_System_Count,//state_count
           g_MainStateConfig_System,//plist_stateConfig
           g_MainStateType_System//pMainStateType
@@ -119,6 +121,8 @@ Ts_SsmInfo g_SsmInfo =
     {
         Te_ModuleId_CruiseManager,
         {
+          Te_MainState_All_Idle,
+          Te_SubState_StopSucceed,
           Te_MainState_CM_Count,
           g_MainStateConfig_CM,
           g_MainStateType_CruiseManager
@@ -137,6 +141,8 @@ Ts_SsmInfo g_SsmInfo =
     {
         Te_ModuleId_HmiAdapte, 
         {
+          Te_MainState_All_Idle,
+          Te_SubState_StopSucceed,
           Te_MainState_HmiAdapte_Count,
           g_MainStateConfig_HmiAdapte,
           g_MainStateType_HmiAdapte
@@ -155,6 +161,8 @@ Ts_SsmInfo g_SsmInfo =
     {
         Te_ModuleId_ADV2HR, 
         {
+          Te_MainState_All_Idle,
+          Te_SubState_StopSucceed,
           Te_MainState_ADV2HR_Count,
           g_MainStateConfig_ADV2HR,
           g_MainStateType_ADV2HR

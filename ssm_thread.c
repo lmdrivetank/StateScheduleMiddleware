@@ -3,7 +3,7 @@
 
 void module_thread(Te_MoudleId_u8 module_id, Ts_threadStateMachineBranch *psmBranch)
 {
-  Ts_ThreadWorkflow*     pWorkflow;
+  Ts_ThreadWorkflow*            pWorkflow;
   int                           work_index = 0;
   int                           state_index = Te_MainState_All_Idle;  
   Te_ModuleMainState_u8         mainState;
