@@ -58,15 +58,12 @@ typedef enum
 {
   Te_MainState_System_Idle,
   Te_MainState_System_Init,
-  Te_MainState_System_PreSimple,
-  Te_MainState_System_RunSimple,
-  Te_MainState_System_PrePCC,
-  Te_MainState_System_RunPCC,
+  Te_MainState_System_Run,
   Te_MainState_System_Terminate,
     
   Te_MainState_System_Count
 } Te_MainState_System;
-
+typedef uint8_t Te_SystemMainState_u8;
 typedef enum
 {
   Te_MainState_CM_Idle,
@@ -84,10 +81,13 @@ typedef enum
 {
   Te_MainState_HmiAdapte_Idle,
   Te_MainState_HmiAdapte_Init,
-  Te_MainState_HmiAdapte_Run,
+  Te_MainState_HmiAdapte_PreSimple,
+  Te_MainState_HmiAdapte_RunSimple,
+  Te_MainState_HmiAdapte_PrePCC,
+  Te_MainState_HmiAdapte_RunPCC,
   Te_MainState_HmiAdapte_Terminate,
   
-  Te_MainState_HmiAdapte_Count,
+  Te_MainState_HmiAdapte_Count
 } Te_MainState_HmiAdapte;
 
 typedef enum
@@ -115,9 +115,8 @@ typedef uint8_t Te_MainStateType_u8;
 
 typedef enum
 {
-  Te_ModuleId_System,
-  Te_ModuleId_CruiseManager,
   Te_ModuleId_HmiAdapte,
+  Te_ModuleId_CruiseManager,  
   Te_ModuleId_ADV2HR,
   
   Te_ModuleId_Count

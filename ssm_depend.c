@@ -43,9 +43,17 @@ Te_ModuleMainState_u8  GetModuleStateDepend(uint8_t this_module_id,
   
   if (this_module_id == depend_module_id)
     return StateNoDepend;
-  
+  //printf("GetModuleStateDepend this_id:%d, depend_id:%d, this_state:%d\n", this_module_id, depend_module_id, this_state);
   module_index = g_SsmInfo.ModuleIndex[this_module_id];
-  depend_state = g_SsmInfo.module_info[module_index].moduledepend_manager.pplist_ModuleStateDepend[this_state][depend_module_id];
+ 
+  if (g_SsmInfo.module_info[module_index].moduledepend_manager.pplist_ModuleStateDepend != NULL)
+  {
+    depend_state = g_SsmInfo.module_info[module_index].moduledepend_manager.pplist_ModuleStateDepend[this_state][depend_module_id];
+  }
+  else
+  {
+    depend_state = StateNoDepend;
+  }
     
   return depend_state;
 }
@@ -225,7 +233,7 @@ void InitModuleDepend()
         self_state = plist_pair[pair_index].module_self_state;
         depend_state = plist_pair[pair_index].depend_state;
         
-        SetModuleDepend( this_module_id, depend_module_id, self_state, depend_state);
+        SetModuleStateDepend( this_module_id, depend_module_id, self_state, depend_state);
         pair_index++;
       }
       list_index++;

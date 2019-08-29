@@ -2,8 +2,12 @@
 #define _SSM_RTE_H_
 
 #include "ssm_type.h"
+
+void SetSystemMainState(Te_SystemMainState_u8 state);
+Te_SystemMainState_u8 GetSystemMainState();
+
 /******************************************************/
-extern uint8_t ModuleDepend_System[Te_MainState_System_Count][Te_ModuleId_Count];
+extern uint8_t ModuleDepend_HmiAdapte[Te_MainState_HmiAdapte_Count][Te_ModuleId_Count];
 /***********************************************/
 
 /***********************************************/

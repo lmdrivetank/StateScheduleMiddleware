@@ -2,6 +2,17 @@
 #include "ssm_config.h"
 #include "ssm_rte.h"
 /******************************************************/
+const Ts_MainStateConfig g_MainStateConfig_HmiAdapte[] = 
+{
+  {Te_MainState_HmiAdapte_Idle,         Te_MainStateType_Idle},
+  {Te_MainState_HmiAdapte_Init,         Te_MainStateType_RunOnce},
+  {Te_MainState_HmiAdapte_PreSimple,    Te_MainStateType_RunOnce},
+  {Te_MainState_HmiAdapte_RunSimple,    Te_MainStateType_RunCycle},
+  {Te_MainState_HmiAdapte_PrePCC,       Te_MainStateType_RunOnce},
+  {Te_MainState_HmiAdapte_RunPCC,       Te_MainStateType_RunCycle},
+  {Te_MainState_HmiAdapte_Terminate,    Te_MainStateType_RunOnce},
+  {Te_MainState_All_End,                Te_MainStateType_End}
+};
 const Ts_MainStateConfig g_MainStateConfig_CM[] = 
 {
   {Te_MainState_CM_Idle,                Te_MainStateType_Idle},
@@ -13,14 +24,6 @@ const Ts_MainStateConfig g_MainStateConfig_CM[] =
   {Te_MainState_CM_Terminate,           Te_MainStateType_RunOnce},
   {Te_MainState_All_End,                Te_MainStateType_End}
 };
-const Ts_MainStateConfig g_MainStateConfig_HmiAdapte[] = 
-{
-  {Te_MainState_HmiAdapte_Idle,         Te_MainStateType_Idle},
-  {Te_MainState_HmiAdapte_Init,         Te_MainStateType_RunOnce},
-  {Te_MainState_HmiAdapte_Run,          Te_MainStateType_RunCycle},
-  {Te_MainState_HmiAdapte_Terminate,    Te_MainStateType_RunOnce},
-  {Te_MainState_All_End,                Te_MainStateType_End}
-};
 const Ts_MainStateConfig g_MainStateConfig_ADV2HR[] = 
 {
   {Te_MainState_ADV2HR_Idle,            Te_MainStateType_Idle},
@@ -29,65 +32,40 @@ const Ts_MainStateConfig g_MainStateConfig_ADV2HR[] =
   {Te_MainState_ADV2HR_Terminate,       Te_MainStateType_RunOnce},
   {Te_MainState_All_End,                Te_MainStateType_End}
 };
-const Ts_MainStateConfig g_MainStateConfig_System[] = 
-{       
-  {Te_MainState_System_Idle,          	Te_MainStateType_Idle},
-  {Te_MainState_System_Init,          	Te_MainStateType_RunOnce},
-  {Te_MainState_System_PreSimple,    	Te_MainStateType_RunOnce},
-  {Te_MainState_System_RunSimple,      	Te_MainStateType_RunCycle},
-  {Te_MainState_System_PrePCC,      	Te_MainStateType_RunOnce},
-  {Te_MainState_System_RunPCC,        	Te_MainStateType_RunCycle},
-  {Te_MainState_System_Terminate,    	Te_MainStateType_RunOnce},
-  {Te_MainState_All_End,                Te_MainStateType_End}
-};
 /******************************************************/
-const Ts_StateDependPair SystemDependCruiseManager[] = 
+const Ts_StateDependPair HmiAdapteDependCruiseManager[] = 
 {
-  {Te_MainState_System_Idle,            Te_MainState_CM_Idle},
-  {Te_MainState_System_Init,            Te_MainState_CM_Init},
-  {Te_MainState_System_PreSimple,       Te_MainState_CM_PreSimple},
-  {Te_MainState_System_RunSimple,       Te_MainState_CM_RunSimple},
-  {Te_MainState_System_PrePCC,          Te_MainState_CM_PrePcc},
-  {Te_MainState_System_RunPCC,          Te_MainState_CM_RunPcc},
-  {Te_MainState_System_Terminate,       Te_MainState_CM_Terminate},
+  {Te_MainState_HmiAdapte_Idle,         Te_MainState_CM_Idle},
+  {Te_MainState_HmiAdapte_Init,         Te_MainState_CM_Init},
+  {Te_MainState_HmiAdapte_PreSimple,    Te_MainState_CM_PreSimple},
+  {Te_MainState_HmiAdapte_RunSimple,    Te_MainState_CM_RunSimple},
+  {Te_MainState_HmiAdapte_PrePCC,       Te_MainState_CM_PrePcc},
+  {Te_MainState_HmiAdapte_RunPCC,       Te_MainState_CM_RunPcc},
+  {Te_MainState_HmiAdapte_Terminate,    Te_MainState_CM_Terminate},
   {Te_MainState_All_End,                Te_MainState_All_End}
 };
-const Ts_StateDependPair SystemDependHmiAdapte[] = 
+const Ts_StateDependPair HmiAdapteDependADV2HR[] = 
 {
-  {Te_MainState_System_Idle,            Te_MainState_HmiAdapte_Idle},
-  {Te_MainState_System_Init,            Te_MainState_HmiAdapte_Init},
-  {Te_MainState_System_PreSimple,       Te_MainState_HmiAdapte_Run},
-  {Te_MainState_System_RunSimple,       Te_MainState_HmiAdapte_Run},
-  {Te_MainState_System_PrePCC,          Te_MainState_HmiAdapte_Run},
-  {Te_MainState_System_RunPCC,          Te_MainState_HmiAdapte_Run},
-  {Te_MainState_System_Terminate,       Te_MainState_HmiAdapte_Terminate},
+  {Te_MainState_HmiAdapte_Idle,         Te_MainState_ADV2HR_Idle},
+  {Te_MainState_HmiAdapte_Init,         Te_MainState_ADV2HR_Init},
+  {Te_MainState_HmiAdapte_RunPCC,       Te_MainState_ADV2HR_Run},
+  {Te_MainState_HmiAdapte_Terminate,    Te_MainState_ADV2HR_Terminate},
   {Te_MainState_All_End,                Te_MainState_All_End}
 };
-const Ts_StateDependPair SystemDependADV2HR[] = 
-{
-  {Te_MainState_System_Idle,            Te_MainState_ADV2HR_Idle},
-  {Te_MainState_System_Init,            Te_MainState_ADV2HR_Init},
-  {Te_MainState_System_RunPCC,          Te_MainState_ADV2HR_Run},
-  {Te_MainState_System_Terminate,       Te_MainState_ADV2HR_Terminate},
-  {Te_MainState_All_End,                Te_MainState_All_End}
-};
-const Ts_DependModuleConfig SystemDependModuleList[] = 
+const Ts_DependModuleConfig HmiAdapteDependModuleList[] = 
 {
   {
       Te_ModuleId_CruiseManager, 
-      SystemDependCruiseManager, 
-      sizeof(SystemDependCruiseManager)/sizeof(Ts_StateDependPair)
+      HmiAdapteDependCruiseManager, 
+      sizeof(HmiAdapteDependCruiseManager)/sizeof(Ts_StateDependPair)
   },
+#if 0
   {
       Te_ModuleId_ADV2HR, 
-      SystemDependADV2HR, 
-      sizeof(SystemDependADV2HR)/sizeof(Ts_StateDependPair)
-  },
-  {     
-      Te_ModuleId_HmiAdapte, 
-      SystemDependHmiAdapte, 
-      sizeof(SystemDependHmiAdapte)/sizeof(Ts_StateDependPair)
-  },
+      HmiAdapteDependADV2HR, 
+      sizeof(HmiAdapteDependADV2HR)/sizeof(Ts_StateDependPair)
+  },  
+#endif
   {     
       Te_ModuleId_End, 
       NULL, 
@@ -95,23 +73,24 @@ const Ts_DependModuleConfig SystemDependModuleList[] =
   }
 };
 /******************************************************/
+/******************************************************/
 Ts_SsmInfo g_SsmInfo = 
 {
   {//struct Ts_ModuleInfo list
     {//struct Ts_ModuleInfo
-        Te_ModuleId_System, //module_id
+        Te_ModuleId_HmiAdapte, 
         {//struct Ts_StateManager
           Te_MainState_All_Idle,
           Te_SubState_StopSucceed,
-          Te_MainState_System_Count,//state_count
-          g_MainStateConfig_System,//plist_stateConfig
-          g_MainStateType_System//pMainStateType
+          Te_MainState_HmiAdapte_Count,
+          g_MainStateConfig_HmiAdapte,
+          g_MainStateType_HmiAdapte
         },
         {//struct Ts_ModuleDependManager
-          sizeof(SystemDependModuleList)/sizeof(Ts_DependModuleConfig),
-          SystemDependModuleList, 
-          ModuleDependInitLevel,          
-          ModuleDepend_System                                                   /* param fisrt: self state index; second: depend module id; result: depend module state */
+          sizeof(HmiAdapteDependModuleList)/sizeof(Ts_DependModuleConfig),
+          HmiAdapteDependModuleList,     
+          ModuleDependInitLevel, 
+          ModuleDepend_HmiAdapte
         },
         {//struct Ts_HeartBeatManager
           Te_HeartBeatState_Fine,
@@ -133,27 +112,7 @@ Ts_SsmInfo g_SsmInfo =
           ModuleDependInitLevel,
           NULL
         },
-        {//struct Ts_HeartBeatManager
-          Te_HeartBeatState_Fine,
-          0
-        }
-    },
-    {
-        Te_ModuleId_HmiAdapte, 
         {
-          Te_MainState_All_Idle,
-          Te_SubState_StopSucceed,
-          Te_MainState_HmiAdapte_Count,
-          g_MainStateConfig_HmiAdapte,
-          g_MainStateType_HmiAdapte
-        },
-        {
-          0,
-          NULL,     
-          ModuleDependInitLevel, 
-          NULL
-        },
-        {//struct Ts_HeartBeatManager
           Te_HeartBeatState_Fine,
           0
         }
@@ -173,7 +132,7 @@ Ts_SsmInfo g_SsmInfo =
           ModuleDependInitLevel,           
           NULL
         },
-        {//struct Ts_HeartBeatManager
+        {
           Te_HeartBeatState_Fine,
           0
         }

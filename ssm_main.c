@@ -11,10 +11,7 @@ Ts_threadStateMachineBranch ssm_sm_branch[] =
 {
   {Te_MainState_System_Idle,            NULL},
   {Te_MainState_System_Init,            ssm_workflow_init},
-  {Te_MainState_System_PreSimple,       ssm_workflow_run},
-  {Te_MainState_System_RunSimple,       ssm_workflow_run},
-  {Te_MainState_System_PrePCC,          ssm_workflow_run},
-  {Te_MainState_System_RunPCC,          ssm_workflow_run},
+  {Te_MainState_System_Run,             ssm_workflow_run},
   {Te_MainState_System_Terminate,       ssm_workflow_terminate},
   
   {Te_MainState_All_End,                NULL}
@@ -40,7 +37,36 @@ Ts_ThreadWorkflow ssm_workflow_terminate[] =
 
 void ssm_thread()
 {
-  Te_MoudleId_u8        module_id = Te_ModuleId_System;
+  Ts_threadStateMachineBranch*  psmBranch = ssm_sm_branch;
+  Ts_ThreadWorkflow*            pWorkflow;
+  int                           work_index = 0;
+  int                           state_index = Te_MainState_All_Idle;  
+  Te_SystemMainState_u8         mainState;
   
-  module_thread(module_id, ssm_sm_branch);
+  mainState     = GetSystemMainState();  
+  
+  while (psmBranch[state_index].state != Te_MainState_All_End)
+  {
+    if (psmBranch[state_index].state != mainState)
+    {
+      state_index++;
+      continue;
+    }
+    
+    pWorkflow = psmBranch[state_index].workflow;
+    while(pWorkflow[work_index].workPerformance != NULL)
+    {
+      if (pWorkflow[work_index].workCondition == NULL ||
+          pWorkflow[work_index].workCondition() == Te_workConditionResult_OK)
+      {
+        if (pWorkflow[work_index].workPerformance() != Te_workPerformanceResult_Succ)
+        {
+          printf("system work performance fail state: %d; index: %d\n", psmBranch[state_index].state, work_index);
+          return;
+        }
+      }
+      work_index++;
+    }
+    break;
+  }
 }

@@ -52,7 +52,7 @@ void InitModuleHeartBeatState()
 int ModuleHeartBeatCheck_SSM(uint8_t module_id)
 {
   Te_HeartBeatState_u8 state = GetHeartBeatState(module_id);
-  
+  //printf("ModuleHeartBeatCheck_SSM %d\n", module_id);
   if (state == Te_HeartBeatState_Fine)
   {
     SetHeartBeatState(module_id, Te_HeartBeatState_Pause);
