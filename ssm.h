@@ -1,13 +1,11 @@
 #ifndef SSM_H
 #define SSM_H
-#include "datadomain.h"
 #include "ssm_type.h"
 #include "ssm_config.h"
 #include "ssm_sm.h"
 
 int InitProcess_SSM();
 int TerminateProcess_SSM();
-int UserFunctionInputCheck_SSM();
 int ModuleStateCheckAll_SSM();
 int ReportModuleError_SSM(uint8_t moduleId, uint8_t errorId);
 

@@ -1,7 +1,6 @@
-#include "datadomain.h"
 #include "ssm_type.h"
 #include "ssm_config.h"
-
+#include "ssm_base.h"
 void AddModuleHeartBeatPauseCount(uint8_t module_id)
 {
   uint8_t module_index = g_SsmInfo.ModuleIndex[module_id];
@@ -52,7 +51,9 @@ void InitModuleHeartBeatState()
 int ModuleHeartBeatCheck_SSM(uint8_t module_id)
 {
   Te_HeartBeatState_u8 state = GetHeartBeatState(module_id);
-  //printf("ModuleHeartBeatCheck_SSM %d\n", module_id);
+  
+  SSM_LOG(Te_AppLogLevel_INFO, "ModuleHeartBeatCheck_SSM %d\n", module_id);
+  
   if (state == Te_HeartBeatState_Fine)
   {
     SetHeartBeatState(module_id, Te_HeartBeatState_Pause);
@@ -67,6 +68,9 @@ int ModuleHeartBeatCheck_SSM(uint8_t module_id)
     {
       SetHeartBeatState(module_id, Te_HeartBeatState_Stop);
       SetSubState(module_id, Te_SubState_HeartBeatError);
+      
+      SSM_LOG(Te_AppLogLevel_ERROR, "module %d heart beat check error!\n", module_id);
+      
       return -1;
     }
   }

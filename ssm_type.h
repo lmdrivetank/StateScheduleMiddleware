@@ -1,8 +1,7 @@
 #ifndef _SSM_TYPE_H_
 #define _SSM_TYPE_H_
-#include "type.h"
-#include "datadomain.h"
-
+#include "app_type.h"
+#include "os_app.h"
 /******thread region start******/
 typedef enum 
 {
@@ -126,7 +125,7 @@ typedef uint8_t Te_MoudleId_u8;
 typedef struct
 {
   Te_ModuleMainState_u8                         module_self_state;
-  Te_ModuleSubState_u8                          depend_state;
+  Te_ModuleMainState_u8                         depend_state;
 } Ts_StateDependPair;
 
 typedef struct
@@ -141,11 +140,15 @@ typedef struct
   const uint8_t                                 MainState_id;
   const Te_MainStateType_u8                     state_type;
 } Ts_MainStateConfig;
-
+typedef struct
+{
+  Te_ModuleMainState_u8                         main_state;
+  Te_ModuleSubState_u8                          sub_state;
+}Ts_ModuleState;
 typedef struct
 {
   /* datedomain store them */
-  Te_MainStateType_u8                           main_state;
+  Te_ModuleMainState_u8                         main_state;
   Te_ModuleSubState_u8                          sub_state;
   /*************************/
   const uint8_t                                 state_count;  

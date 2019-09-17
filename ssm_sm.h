@@ -1,6 +1,6 @@
 #ifndef _SSM_SM_H_
 #define _SSM_SM_H_
-#include "datadomain.h"
+
 #include "ssm_type.h"
 
 void InitModuleStateType();

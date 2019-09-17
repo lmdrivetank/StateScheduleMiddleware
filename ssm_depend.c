@@ -1,4 +1,3 @@
-#include "datadomain.h"
 #include "ssm_type.h"
 #include "ssm_config.h"
 
@@ -43,7 +42,7 @@ Te_ModuleMainState_u8  GetModuleStateDepend(uint8_t this_module_id,
   
   if (this_module_id == depend_module_id)
     return StateNoDepend;
-  //printf("GetModuleStateDepend this_id:%d, depend_id:%d, this_state:%d\n", this_module_id, depend_module_id, this_state);
+  //SSM_LOG(Te_AppLogLevel_INFO, "app_printf####GetModuleStateDepend this_id:%d, depend_id:%d, this_state:%d\n", this_module_id, depend_module_id, this_state);
   module_index = g_SsmInfo.ModuleIndex[this_module_id];
  
   if (g_SsmInfo.module_info[module_index].moduledepend_manager.pplist_ModuleStateDepend != NULL)
@@ -122,6 +121,7 @@ void InitModuleLevel()
    *behavior above will continuous cycle, until find out no bigger thing occur*/
   while (TRUE == go_continue)
   {
+    //vTaskDelayMs(10);
     go_continue = FALSE;
     for (module_id = 0; module_id < Te_ModuleId_Count; module_id++)
     {
@@ -129,6 +129,8 @@ void InitModuleLevel()
       for (list_index = 0; list_index < depend_module_count; list_index++)
       {
         depend_module_id = GetDependModuleId(module_id, list_index);
+        if (depend_module_id == Te_ModuleId_End)
+          continue;
         depend_level = GetModuleDependLevel(depend_module_id);
         if (depend_level >= GetModuleDependLevel(module_id))
         {

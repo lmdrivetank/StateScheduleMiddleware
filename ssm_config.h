@@ -2,7 +2,7 @@
 #define SSM_CONFIG_H
 
 #include "ssm_type.h"
-
+#define __DEBUG_MODE__   1
 #define         UpperLimit_HeartBeatStopTime            128
 #define         ModuleNoDepend                          0xff
 #define         StateNoDepend                           0xff

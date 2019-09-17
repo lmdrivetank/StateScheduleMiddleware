@@ -2,7 +2,8 @@
 #include "ssm_type.h"
 #include "ssm_config.h"
 #include "ssm_thread.h"
-
+#include "ssm_base.h"
+#include "ssm_main.h"
 extern Ts_ThreadWorkflow ssm_workflow_init[];
 extern Ts_ThreadWorkflow ssm_workflow_run[];
 extern Ts_ThreadWorkflow ssm_workflow_terminate[];
@@ -23,10 +24,7 @@ Ts_ThreadWorkflow ssm_workflow_init[] =
 };
 Ts_ThreadWorkflow ssm_workflow_run[] = 
 {
-  //{NULL, RunProcess_SSM},
-  {NULL, UserFunctionInputCheck_SSM},
   {NULL, ModuleStateCheckAll_SSM},
- // {NULL, ReportModuleError_SSM},
   {NULL, NULL}
 };
 Ts_ThreadWorkflow ssm_workflow_terminate[] = 
@@ -34,16 +32,33 @@ Ts_ThreadWorkflow ssm_workflow_terminate[] =
   {NULL, TerminateProcess_SSM},
   {NULL, NULL}
 };
-
-void ssm_thread()
+#define         TaskId_SSM      Te_ModuleId_Count
+extern void thread_work_ssm(Te_MoudleId_u8 module_id, Ts_threadStateMachineBranch *psmBranch);
+void thread_init_ssm()
 {
-  Ts_threadStateMachineBranch*  psmBranch = ssm_sm_branch;
+  module_thread_init();
+  
+  module_thread_create(	TaskId_SSM,
+                        thread_work_ssm,        //if NULL, will be set module_thread_runnable; else user self define (only ssm except)
+                        "thread_work_ssm",
+                        BYTE_TO_STACK_DEPTH(1024*4),
+                        2,
+                        1000,                   //us
+                        1000*1000,              //us
+                        ssm_sm_branch);
+}
+void thread_release_ssm()
+{
+  module_thread_release( TaskId_SSM );
+}
+void thread_work_ssm(Te_MoudleId_u8 module_id, Ts_threadStateMachineBranch *psmBranch)
+{
   Ts_ThreadWorkflow*            pWorkflow;
   int                           work_index = 0;
   int                           state_index = Te_MainState_All_Idle;  
   Te_SystemMainState_u8         mainState;
-  
-  mainState     = GetSystemMainState();  
+     
+  mainState = GetSystemMainState();  
   
   while (psmBranch[state_index].state != Te_MainState_All_End)
   {
@@ -59,11 +74,14 @@ void ssm_thread()
       if (pWorkflow[work_index].workCondition == NULL ||
           pWorkflow[work_index].workCondition() == Te_workConditionResult_OK)
       {
+        //SSM_LOG(Te_AppLogLevel_INFO, "-------------\n");
         if (pWorkflow[work_index].workPerformance() != Te_workPerformanceResult_Succ)
         {
-          printf("system work performance fail state: %d; index: %d\n", psmBranch[state_index].state, work_index);
-          return;
+          SSM_LOG(Te_AppLogLevel_INFO, "system work performance fail! state: %d; index: %d\n", psmBranch[state_index].state, work_index);
+          SSM_LOG(Te_AppLogLevel_INFO, "system thread end\n");
+          break;
         }
+        //SSM_LOG(Te_AppLogLevel_INFO, "-------------\n");
       }
       work_index++;
     }
